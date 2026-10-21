@@ -104,7 +104,7 @@ force-app/main/default/
 ├── sites/              Public Site
 ├── permissionsets/     Admin (edit) and Guest (read-only)
 └── ...
-assets/seed/        Images used by the sample demo
+assets/seed/             Images used by the sample demo
 scripts/
 ├── seedDemo.apex       Loads the sample demo
 └── assignGuest.apex    Grants the guest user read access
