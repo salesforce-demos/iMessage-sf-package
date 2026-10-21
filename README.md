@@ -20,23 +20,6 @@ The sample demo in `scripts/seedDemo.apex` uses `Acme` placeholders for the
 voice settings. Replace `Agent_My_Domain__c` and `Agent_Id__c` with your own
 agent values, or leave them blank to use a scripted call.
 
-Create a scratch org, deploy the metadata and load the sample demo:
-
-```bash
-sf org create scratch -f config/project-scratch-def.json -a imessage-config \
-  --target-dev-hub <your-dev-hub> --duration-days 30 --set-default
-sf project deploy start --target-org imessage-config
-sf org assign permset --name iMessage_Demo_Admin --target-org imessage-config
-sf apex run --target-org imessage-config --file scripts/seedDemo.apex
-```
-
-The Site's guest user is created only after the Site exists, so grant it read
-access in a separate step:
-
-```bash
-sf apex run --target-org imessage-config --file scripts/assignGuest.apex
-```
-
 Get the endpoint URL:
 
 ```bash
@@ -72,12 +55,6 @@ Saving replaces the demo's conversations, messages and notifications. Use
 - To keep several demos and switch between them, leave **Is Active** off and
   use `/DemoConfig?id=<Config Name>`.
 
-### Images
-
-Image fields have a file picker. Uploaded files are stored in Salesforce Files
-and get a public URL. Files are limited to 3 MB. You can also paste a public
-`https` URL. If the preview does not show an image from another host, add that
-host under **Setup → CSP Trusted Sites** with **img-src** enabled.
 
 ### Editing records directly
 
