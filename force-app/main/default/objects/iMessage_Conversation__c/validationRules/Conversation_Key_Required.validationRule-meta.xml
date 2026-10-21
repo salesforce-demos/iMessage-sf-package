@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conversation_Key_Required</fullName>
+    <active>false</active>
+    <description>Notifications and deep links require every conversation to have a key.</description>
+    <errorConditionFormula>ISBLANK(Conversation_Key__c)</errorConditionFormula>
+    <errorDisplayField>Conversation_Key__c</errorDisplayField>
+    <errorMessage>Enter a conversation key so notifications can open this conversation.</errorMessage>
+</ValidationRule>

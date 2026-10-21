@@ -1,0 +1,186 @@
+/* A custom element is inline unless it is told otherwise. */
+:host {
+    display: block;
+    height: 100%;
+}
+
+/* Only there to be measured: the phone is zoomed to whatever fits in here. */
+.fit {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* 1px here is 1pt on the device, so the measured numbers transfer directly.
+   zoom shrinks the layout box as well as the paint, which transform does not:
+   that mismatch is what made earlier attempts overlap their neighbours. */
+.phone {
+    zoom: .8;   /* replaced at runtime by the measured fit */
+    position: relative;
+    width: 402px;
+    height: 800px;
+    border-radius: 54px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 0 0 10px #1c1c1e, 0 18px 44px rgba(0, 0, 0, 0.28);
+    font-family: -apple-system, "SF Pro Text", system-ui, sans-serif;
+    color: #000;
+}
+.island {
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    width: 125px; height: 37px; border-radius: 19px; background: #000; z-index: 40;
+}
+.screen, .poster { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.poster { background-size: cover; background-position: center; }
+.vignette {
+    position: absolute; inset: 0;
+    background: linear-gradient(rgba(0,0,0,.42) 0%, rgba(0,0,0,.10) 24%, transparent 42%,
+                                rgba(0,0,0,.16) 62%, rgba(0,0,0,.52) 100%);
+}
+
+.statusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 22px 0; font-size: 15px; font-weight: 600; height: 62px;
+    box-sizing: border-box; position: relative; z-index: 30;
+}
+.statusbar.light { color: #fff; }
+.sb-right { letter-spacing: 1px; font-size: 11px; }
+
+/* ---- call ---- */
+.call-contact { position: relative; z-index: 20; text-align: center; margin-top: 62px; color: #fff; }
+.call-name { font-size: 40px; font-weight: 600; text-shadow: 0 1px 12px rgba(0,0,0,.28); }
+.call-sub { font-size: 19px; opacity: .75; margin-top: 6px; }
+.controls {
+    position: absolute; bottom: 150px; left: 0; right: 0; z-index: 20;
+    display: grid; grid-template-columns: repeat(3, 1fr); row-gap: 26px;
+}
+.ctl { display: flex; flex-direction: column; align-items: center; gap: 7px; color: #fff; }
+.ctl span {
+    width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 26px; background: rgba(0,0,0,.22); backdrop-filter: blur(14px);
+    border: .5px solid rgba(255,255,255,.16);
+}
+.ctl i { font-style: normal; font-size: 13px; opacity: .9; }
+.end {
+    position: absolute; bottom: 62px; left: 50%; transform: translateX(-50%); z-index: 20;
+    width: 76px; height: 76px; border-radius: 50%; background: #ff3b30;
+}
+.end::after { content: "📞"; display: grid; place-items: center; height: 100%; filter: grayscale(1) brightness(3); }
+
+.banner {
+    position: absolute; top: 58px; left: 14px; right: 14px; z-index: 35;
+    display: flex; gap: 12px; align-items: center; padding: 12px 14px;
+    border-radius: 24px; background: rgba(28,28,30,.72); backdrop-filter: blur(20px); color: #fff;
+}
+.banner-icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; }
+.banner-body { flex: 1; min-width: 0; }
+.banner-title { font-size: 14px; font-weight: 700; }
+.banner-msg { font-size: 13px; opacity: .88; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.banner-time { font-size: 12px; opacity: .55; }
+
+/* ---- thread ---- */
+.thread-head { display: flex; align-items: flex-start; padding: 0 14px; height: 88px; position: relative; }
+.back { color: #007aff; font-size: 26px; line-height: 46px; width: 46px; text-align: center;
+        border-radius: 50%; background: rgba(120,120,128,.10); }
+.video { color: #000; font-size: 20px; line-height: 46px; width: 46px; text-align: center;
+         border-radius: 50%; background: rgba(120,120,128,.10); margin-left: auto; }
+.head-center { position: absolute; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: -6px; }
+.avatar { width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(#b6b6bc,#8e8e93); background-size: cover; background-position: center; flex: none; }
+.avatar.big { width: 60px; height: 60px; }
+.head-name { font-size: 15px; font-weight: 600; margin-top: -4px; padding: 5px 12px; border-radius: 20px; background: rgba(120,120,128,.10); }
+
+.transcript { flex: 1; overflow-y: auto; padding: 8px 0 14px; }
+.row { display: flex; padding: 0 20px; }
+.row.mine { justify-content: flex-end; }
+.bubble {
+    position: relative; max-width: 70.6%; padding: 10px 16px; font-size: 17px;
+    line-height: 20px; border-radius: 18px; word-wrap: break-word;
+}
+.bubble.in { background: #e9e9eb; color: #000; }
+.bubble.out { background: #248bf5; color: #fff; }
+.bubble.out.sms { background: #34c759; }
+/* The tail: a bulge plus a mask in the page colour, the classic two-pseudo trick. */
+.bubble.tail::before {
+    content: ""; position: absolute; bottom: 0; width: 20px; height: 20px;
+}
+.bubble.tail::after {
+    content: ""; position: absolute; bottom: 0; width: 10px; height: 20px; background: #fff;
+}
+.bubble.in.tail::before { left: -7px; background: #e9e9eb; border-bottom-right-radius: 16px; }
+.bubble.in.tail::after { left: -12px; border-bottom-right-radius: 10px; }
+.bubble.out.tail::before { right: -7px; background: #248bf5; border-bottom-left-radius: 16px; }
+.bubble.out.sms.tail::before { background: #34c759; }
+.bubble.out.tail::after { right: -12px; border-bottom-left-radius: 10px; }
+
+.quote {
+    max-width: 70.6%; padding: 3.5px 12px; font-size: 11px; line-height: 13px;
+    color: #8f8f8f; border: 1.3px solid #ccc; border-radius: 12px; word-wrap: break-word;
+}
+.connector {
+    width: 22px; height: 35px; margin-left: 16px;
+    border-left: 4px solid #eaeaea; border-bottom: 4px solid #eaeaea;
+    border-bottom-left-radius: 14px;
+}
+.row.mine .connector { margin-left: 0; margin-right: 16px;
+    border-left: 0; border-right: 4px solid #eaeaea;
+    border-bottom-left-radius: 0; border-bottom-right-radius: 14px; }
+.reply-link { font-size: 13px; font-weight: 500; color: #0088fe; padding-top: 5px; }
+.row.reply-row { padding-left: 42.7px; }
+.row.reply-row.mine { padding-left: 20px; padding-right: 42.7px; }
+
+.bubble { cursor: pointer; }
+.bubble:hover { outline: 2px solid rgba(1, 118, 211, .55); outline-offset: 2px; }
+.bubble.selected { outline: 2.5px solid #0176d3; outline-offset: 2px; }
+.bubble:focus-visible { outline: 2.5px solid #0176d3; outline-offset: 2px; }
+.lrow { cursor: pointer; }
+.lrow:hover { background: rgba(1, 118, 211, .07); }
+.lrow:focus-visible { outline: 2.5px solid #0176d3; outline-offset: -3px; }
+
+.composer { display: flex; align-items: center; gap: 10px; padding: 8px 16px 28px; }
+.plus { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+        font-size: 22px; border: .5px solid rgba(60,60,67,.20); color: #333; }
+.field { flex: 1; height: 40px; border-radius: 20px; border: .5px solid rgba(60,60,67,.20);
+         display: flex; align-items: center; padding: 0 14px; color: #8a8a8e; font-size: 17px; }
+
+/* ---- list ---- */
+.list-top { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; height: 46px; }
+.edit { padding: 8px 16px; border-radius: 20px; background: rgba(120,120,128,.10); font-size: 17px; }
+.filter { width: 40px; height: 40px; border-radius: 50%; background: rgba(120,120,128,.10); display: grid; place-items: center; }
+.big-title { font-size: 34px; font-weight: 700; padding: 8px 20px 6px; }
+.rows { flex: 1; overflow-y: auto; }
+.lrow { display: flex; align-items: center; gap: 12px; padding: 13.5px 16px 13.5px 26px;
+        position: relative; border-bottom: .5px solid rgba(60,60,67,.18); margin-left: 0; }
+.lrow .dot { position: absolute; left: 7.3px; width: 11px; height: 11px; border-radius: 50%; background: #007aff; }
+.lbody { flex: 1; min-width: 0; }
+.ltop { display: flex; justify-content: space-between; align-items: baseline; }
+.lname { font-size: 17px; font-weight: 600; }
+.ltime { font-size: 15px; color: #8a8a8e; }
+.lprev { font-size: 16px; color: #8a8a8e; display: -webkit-box; -webkit-line-clamp: 2;
+         -webkit-box-orient: vertical; overflow: hidden; }
+.fwd { color: #8a8a8e; }
+.mute { float: right; font-size: 12px; }
+.search-bar { display: flex; gap: 10px; padding: 10px 16px 28px; align-items: center; }
+.search { flex: 1; height: 40px; border-radius: 20px; border: .5px solid rgba(60,60,67,.20);
+          display: flex; align-items: center; padding: 0 14px; color: #8a8a8e; font-size: 17px; }
+.compose { width: 40px; height: 40px; border-radius: 50%; border: .5px solid rgba(60,60,67,.20);
+           display: grid; place-items: center; }
+
+/* ---- phone tab: favorites ---- */
+/* The number on the right is the contacts[] id the endpoint hands the app,
+   which is what its avatar cache is keyed on. */
+.frow { display: flex; align-items: center; gap: 12px; padding: 11px 16px;
+        border-bottom: .5px solid rgba(60,60,67,.18); cursor: pointer; }
+.frow:hover { background: rgba(1, 118, 211, .07); }
+.frow:focus-visible { outline: 2.5px solid #0176d3; outline-offset: -3px; }
+.frow .lname { font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.flabel { font-size: 13px; color: #8a8a8e; margin-top: 2px; }
+.fnum { font-size: 11px; color: #c7c7cc; font-variant-numeric: tabular-nums; }
+.fempty { padding: 24px 16px; font-size: 13px; color: #8a8a8e; text-align: center; }
+
+.tabbar { display: flex; justify-content: space-around; padding: 8px 0 22px;
+          border-top: .5px solid rgba(60,60,67,.18); background: #f9f9f9; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 2px; color: #8a8a8e; }
+.tab i { font-style: normal; font-size: 10px; }
+.tab.is-on { color: #007aff; }
+

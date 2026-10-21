@@ -1,0 +1,519 @@
+<template>
+    <div class="wrap">
+      <div class="cols">
+        <!-- The toolbar and the warnings used to span the full width. They live
+             in this column now, so the phone gets the whole height. -->
+        <div class="left">
+        <!-- toolbar -->
+        <div class="bar slds-p-around_small">
+            <lightning-combobox class="picker" label="Demo" variant="label-hidden"
+                options={demoOptions} value={selectedDemoId} onchange={handleDemoPick}></lightning-combobox>
+            <lightning-button label="Refresh" icon-name="utility:refresh" onclick={refreshFromOrg}
+                disabled={saving}></lightning-button>
+            <lightning-button label="New" icon-name="utility:add" onclick={newDemo}
+                disabled={saving}></lightning-button>
+            <lightning-button label="Duplicate" icon-name="utility:copy" onclick={duplicateDemo}
+                disabled={duplicateDisabled}></lightning-button>
+            <lightning-button label="Save" variant="brand" onclick={save}
+                disabled={saveDisabled}></lightning-button>
+            <lightning-button label="Delete" icon-name="utility:delete" onclick={deleteDemo}
+                disabled={actionDisabled}></lightning-button>
+            <span class={saveStateClass} aria-live="polite">{saveStateLabel}</span>
+            <div class="spacer"></div>
+        </div>
+
+        <template lwc:if={endpointUrl}>
+            <div class="urls" aria-label="Demo URLs">
+                <div class="url-row">
+                    <span class="url-label">This demo</span>
+                    <code class="url" title={endpointUrl}>{endpointUrl}</code>
+                    <lightning-button label="Copy" icon-name="utility:copy"
+                        onclick={copyUrl}></lightning-button>
+                </div>
+                <template lwc:if={showDefaultUrl}>
+                    <div class="url-row">
+                        <span class="url-label">Default</span>
+                        <code class="url" title={defaultUrl}>{defaultUrl}</code>
+                        <lightning-button label="Copy" icon-name="utility:copy"
+                            onclick={copyDefaultUrl}></lightning-button>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template lwc:if={hasIssues}>
+            <section class="issues" aria-live="polite" aria-label="Configuration checks">
+                <strong class="issue-summary">{issueSummary}</strong>
+                <template for:each={issues} for:item="i">
+                    <div key={i.key} class={i.cls}>{i.message}</div>
+                </template>
+            </section>
+        </template>
+        <template lwc:if={hasTree}>
+                <!-- editor -->
+                <div class="editor slds-p-around_small">
+                    <lightning-accordion allow-multiple-sections-open
+                        active-section-name={openSections}>
+
+                        <lightning-accordion-section name="basics" label="1. Basics">
+                            <p class="section-help">
+                                Start here, then add contacts, notifications and conversations. Warnings are advisory
+                                and never prevent saving. The call itself belongs to a contact — set it up in
+                                <strong>4. Phone app</strong>.
+                            </p>
+                            <lightning-input label="Demo name" data-field="name" value={demo.name}
+                                onchange={handleDemoField}></lightning-input>
+                            <div class="config-row">
+                                <lightning-input label="URL key" data-field="configName"
+                                    field-level-help="Unique key used in this demo’s stable URL (?id=…). Generate creates a safe key from the demo name."
+                                    value={demo.configName} onchange={handleDemoField}></lightning-input>
+                                <lightning-button label="Generate" icon-name="utility:magicwand"
+                                    onclick={generateConfigName}></lightning-button>
+                            </div>
+                            <lightning-input type="checkbox" label="Also serve this as the default URL"
+                                field-level-help="When checked, the bare endpoint (without ?id=) opens this demo. Every demo still keeps its own stable URL."
+                                data-field="isActive" checked={demo.isActive}
+                                onchange={handleDemoField}></lightning-input>
+                            <lightning-input type="checkbox" label="Show in the app's demo list"
+                                field-level-help="When checked, this demo appears in the setup screen of the app so it can be picked without pasting its URL."
+                                data-field="showInApp" checked={demo.showInApp}
+                                onchange={handleDemoField}></lightning-input>
+                        </lightning-accordion-section>
+
+                        <lightning-accordion-section name="notifs" label="2. Notifications">
+                            <template for:each={notificationRows} for:item="n">
+                                <div key={n.key} class={n.cardCls}>
+                                    <div class="card-heading">
+                                        <strong>{n.displayLabel}</strong>
+                                        <span class="card-hint">{n.callHint}</span>
+                                        <lightning-button label="Preview" icon-name="utility:preview"
+                                            data-index={n.index} onclick={handlePreviewNotification}></lightning-button>
+                                    </div>
+                                    <lightning-input label="Title" data-index={n.index} data-field="title"
+                                        value={n.title} onchange={handleNotifField}></lightning-input>
+                                    <lightning-textarea label="Message" data-index={n.index} data-field="message"
+                                        value={n.message} onchange={handleNotifField}></lightning-textarea>
+                                    <div class="two">
+                                        <lightning-combobox label="Shows during call" data-index={n.index}
+                                            data-field="callKey" value={n.callKey}
+                                            options={callOptions}
+                                            field-level-help="The call this banner drops into. Every call falls back to the shared list."
+                                            onchange={handleNotifField}></lightning-combobox>
+                                        <lightning-input type="number" min="0" max="999.9" step="0.5"
+                                            label="After (seconds)" data-index={n.index} data-field="afterSeconds"
+                                            value={n.afterSeconds}
+                                            field-level-help="Counted from the moment the call connects. Blank drops it in nine seconds behind the banner above."
+                                            onchange={handleNotifField}></lightning-input>
+                                    </div>
+                                    <div class="two">
+                                        <lightning-combobox label="Opens conversation" data-index={n.index}
+                                            data-field="conversationKey" value={n.conversationKey}
+                                            options={conversationOptions}
+                                            onchange={handleNotifField}></lightning-combobox>
+                                        <lightning-input label="Time ago" data-index={n.index} data-field="timeAgo"
+                                            value={n.timeAgo} onchange={handleNotifField}></lightning-input>
+                                    </div>
+                                    <details class="advanced">
+                                        <summary>Advanced appearance</summary>
+                                        <div class="two">
+                                            <lightning-input label="Icon name" data-index={n.index}
+                                                data-field="iconName" value={n.iconName}
+                                                field-level-help="An SF Symbol, such as message.fill."
+                                                onchange={handleNotifField}></lightning-input>
+                                            <lightning-input label="Icon color" data-index={n.index}
+                                                data-field="iconColor" value={n.iconColor}
+                                                field-level-help="Hex color such as #4CD964."
+                                                onchange={handleNotifField}></lightning-input>
+                                            <lightning-input label="Document icon" data-index={n.index}
+                                                data-field="documentIcon" value={n.documentIcon}
+                                                field-level-help="URL of a thumbnail shown on the right of the banner."
+                                                onchange={handleNotifField}></lightning-input>
+                                        </div>
+                                    </details>
+                                    <lightning-button label="Remove notification" data-index={n.index}
+                                        variant="destructive-text" onclick={removeNotification}></lightning-button>
+                                </div>
+                            </template>
+                            <lightning-button label="Add notification" icon-name="utility:add"
+                                onclick={addNotification}></lightning-button>
+                        </lightning-accordion-section>
+
+                        <lightning-accordion-section name="convs" label="3. Conversations">
+                            <div class="tabs" role="tablist" aria-label="Conversations">
+                                <template for:each={conversationTabs} for:item="t">
+                                    <button key={t.key} type="button" role="tab" aria-selected={t.selected}
+                                        class={t.cls} data-index={t.index}
+                                        onclick={handleConvTab}>{t.label}</button>
+                                </template>
+                                <lightning-button-icon icon-name="utility:add" alternative-text="Add conversation"
+                                    title="Add conversation" onclick={addConversation}></lightning-button-icon>
+                            </div>
+
+                            <template lwc:if={activeConversation}>
+                                <div class="two">
+                                    <lightning-input label="Contact name" data-field="contactName"
+                                        value={activeConversation.contactName} onchange={handleConvField}></lightning-input>
+                                    <lightning-input label="Conversation key" data-field="conversationKey"
+                                        field-level-help="Unique key used by notifications to open this conversation."
+                                        value={activeConversation.conversationKey} onchange={handleConvField}></lightning-input>
+                                </div>
+                                <lightning-input label="Avatar URL" data-field="avatarUrl"
+                                    field-level-help="Any https URL the phone can reach. For it to also show in this preview, the host must be listed under Setup → CSP Trusted Sites with img-src ticked (images.unsplash.com and ui-avatars.com already are)."
+                                    value={activeConversation.avatarUrl} onchange={handleConvField}></lightning-input>
+                                <div class="upload">
+                                    <lightning-input type="file" label="Upload contact avatar" variant="label-hidden"
+                                        accept="image/png,image/jpeg,image/heic,image/heif,image/gif"
+                                        data-target="conversation" onchange={handlePickImage}></lightning-input>
+                                    <template lwc:if={uploadingAvatar}>
+                                        <lightning-spinner size="small" variant="brand"
+                                            alternative-text="Uploading"></lightning-spinner>
+                                    </template>
+                                    <small>or upload one</small>
+                                </div>
+                                <lightning-input label="List preview" data-field="lastMessagePreview"
+                                    value={activeConversation.lastMessagePreview} onchange={handleConvField}></lightning-input>
+                                <div class="two">
+                                    <lightning-input label="List time" data-field="lastMessageTime"
+                                        value={activeConversation.lastMessageTime} onchange={handleConvField}></lightning-input>
+                                    <lightning-input type="number" min="0" max="999" step="1"
+                                        label="Unread count" data-field="unreadCount"
+                                        value={activeConversation.unreadCount} onchange={handleConvField}></lightning-input>
+                                </div>
+                                <div class="three">
+                                    <lightning-input type="checkbox" label="SMS (green)" data-field="isSMS"
+                                        checked={activeConversation.isSMS} onchange={handleConvField}></lightning-input>
+                                    <lightning-input type="checkbox" label="Muted" data-field="isMuted"
+                                        checked={activeConversation.isMuted} onchange={handleConvField}></lightning-input>
+                                    <lightning-input type="checkbox" label="Forwarded" data-field="isForwarded"
+                                        checked={activeConversation.isForwarded} onchange={handleConvField}></lightning-input>
+                                </div>
+                                <div class="phone-block">
+                                    <lightning-input type="checkbox" label="Show in the Phone app"
+                                        field-level-help="Ticked, this contact appears in Favorites, Recents and Contacts, and tapping it places the call."
+                                        data-field="showInPhone" checked={activeConversation.showInPhone}
+                                        onchange={handleConvField}></lightning-input>
+                                    <template lwc:if={activeConversation.showInPhone}>
+                                        <small class="hint">Its call options and its place in Favorites are in
+                                            <strong>4. Phone app</strong>.</small>
+                                    </template>
+                                </div>
+
+                                <details class="advanced">
+                                    <summary>Advanced conversation settings</summary>
+                                    <lightning-input label="Contact subtitle" data-field="contactSubtitle"
+                                        value={activeConversation.contactSubtitle}
+                                        onchange={handleConvField}></lightning-input>
+                                    <div class="two">
+                                        <lightning-input type="number" min="1" max="99999" step="1"
+                                            label="Transcript speed (milliseconds)" data-field="transcriptSpeed"
+                                            value={activeConversation.transcriptSpeed}
+                                            onchange={handleConvField}></lightning-input>
+                                        <lightning-input label="Draft text" data-field="draftText"
+                                            value={activeConversation.draftText}
+                                            onchange={handleConvField}></lightning-input>
+                                    </div>
+                                </details>
+
+                                <div class="msg-head">
+                                    <strong>Messages</strong>
+                                    <lightning-button label="Add step" icon-name="utility:add"
+                                        onclick={addMessage}></lightning-button>
+                                </div>
+
+                                <div role="list" aria-label="Message steps">
+                                <template for:each={messageRows} for:item="m">
+                                    <div key={m.key} class={m.cardCls} data-index={m.index}
+                                         role="listitem"
+                                         draggable="true" ondragstart={handleDragStart}
+                                         ondragover={handleDragOver} ondrop={handleDrop}
+                                         ondragend={handleDragEnd}>
+                                        <div class="msg-top">
+                                            <span class="grip" title="Drag to reorder" aria-hidden="true">⠿</span>
+                                            <lightning-combobox label={m.senderLabel} variant="label-hidden" class="sender"
+                                                options={senderOptions} value={m.sender} data-index={m.index}
+                                                data-field="sender" onchange={handleMsgField}></lightning-combobox>
+                                            <template lwc:if={m.badge}><span class="badge">{m.badge}</span></template>
+                                            <div class="spacer"></div>
+                                            <lightning-button-icon icon-name="utility:up" data-index={m.index}
+                                                alternative-text={m.moveUpLabel} title={m.moveUpLabel}
+                                                disabled={m.isFirst} data-delta="-1"
+                                                onclick={moveMessage}></lightning-button-icon>
+                                            <lightning-button-icon icon-name="utility:down" data-index={m.index}
+                                                alternative-text={m.moveDownLabel} title={m.moveDownLabel}
+                                                disabled={m.isLast} data-delta="1"
+                                                onclick={moveMessage}></lightning-button-icon>
+                                            <lightning-button-icon icon-name="utility:delete" data-index={m.index}
+                                                alternative-text={m.deleteLabel} title={m.deleteLabel}
+                                                onclick={removeMessage}></lightning-button-icon>
+                                        </div>
+                                        <lightning-textarea label={m.editorLabel} variant="label-hidden" placeholder="Message text"
+                                            value={m.text} data-index={m.index} data-field="text"
+                                            onchange={handleMsgField}></lightning-textarea>
+                                        <div class="four">
+                                            <lightning-input type="checkbox" label="Auto" data-index={m.index}
+                                                data-field="sendAutomatically" checked={m.sendAutomatically}
+                                                onchange={handleMsgField}></lightning-input>
+                                            <lightning-input type="checkbox" label="Await photo" data-index={m.index}
+                                                data-field="awaitPhoto" checked={m.awaitPhoto}
+                                                onchange={handleMsgField}></lightning-input>
+                                            <lightning-input type="number" min="0" max="999.9" step="0.1" label="Typing (seconds)"
+                                                data-index={m.index} data-field="typingSeconds"
+                                                value={m.typingSeconds} onchange={handleMsgField}></lightning-input>
+                                            <lightning-input type="number" min="0" max="999.9" step="0.1" label="Pause (seconds)"
+                                                data-index={m.index} data-field="pauseSeconds"
+                                                value={m.pauseSeconds} onchange={handleMsgField}></lightning-input>
+                                        </div>
+                                        <details class="advanced">
+                                            <summary>Advanced step settings</summary>
+                                            <lightning-input label="Image URL" data-index={m.index}
+                                                data-field="imageUrl" value={m.imageUrl}
+                                                onchange={handleMsgField}></lightning-input>
+                                            <div class="three">
+                                                <lightning-combobox label="Reacts to previous" options={tapbackOptions}
+                                                    value={m.reactToPrevious} data-index={m.index}
+                                                    data-field="reactToPrevious" onchange={handleMsgField}></lightning-combobox>
+                                                <lightning-combobox label="Tapback" options={tapbackOptions}
+                                                    value={m.tapback} data-index={m.index}
+                                                    data-field="tapback" onchange={handleMsgField}></lightning-combobox>
+                                                <lightning-combobox label="Effect" options={effectOptions}
+                                                    value={m.effect} data-index={m.index} data-field="effect"
+                                                    onchange={handleMsgField}></lightning-combobox>
+                                                <lightning-combobox label="Delivery" options={deliveryOptions}
+                                                    value={m.deliveryStatus} data-index={m.index}
+                                                    data-field="deliveryStatus" onchange={handleMsgField}></lightning-combobox>
+                                                <lightning-combobox label="Replies to" options={m.replyOptions}
+                                                    field-level-help="Choose an earlier step in this conversation."
+                                                    data-index={m.index} data-field="replyToStep"
+                                                    value={m.replyValue} onchange={handleMsgField}></lightning-combobox>
+                                            </div>
+                                        </details>
+                                    </div>
+                                </template>
+                                </div>
+
+                                <lightning-button label="Remove this conversation"
+                                    variant="destructive-text" onclick={removeConversation}></lightning-button>
+                            </template>
+                        </lightning-accordion-section>
+
+                        <lightning-accordion-section name="phone" label="4. Phone app">
+                            <p class="section-help">
+                                Favorites, in the order the app lists them — tap one on the phone and the
+                                call starts. The number on the left is the <code>contacts[].id</code> the
+                                endpoint hands the app. A contact is a conversation, so the name and the
+                                avatar here are the ones its Messages thread uses.
+                            </p>
+                            <template for:each={phoneContactRows} for:item="p">
+                                <div key={p.key} class="card fav">
+                                    <div class="fav-head">
+                                        <span class="fav-pos">{p.position}</span>
+                                        <strong class="fav-title">{p.displayName}</strong>
+                                        <div class="spacer"></div>
+                                        <lightning-button-icon icon-name="utility:up"
+                                            alternative-text={p.moveUpLabel} title={p.moveUpLabel}
+                                            disabled={p.isFirst} data-position={p.position} data-delta="-1"
+                                            onclick={movePhoneContact}></lightning-button-icon>
+                                        <lightning-button-icon icon-name="utility:down"
+                                            alternative-text={p.moveDownLabel} title={p.moveDownLabel}
+                                            disabled={p.isLast} data-position={p.position} data-delta="1"
+                                            onclick={movePhoneContact}></lightning-button-icon>
+                                        <lightning-button-icon icon-name="utility:close"
+                                            alternative-text={p.removeLabel} title={p.removeLabel}
+                                            data-index={p.index}
+                                            onclick={removePhoneContact}></lightning-button-icon>
+                                    </div>
+
+                                    <div class="two">
+                                        <lightning-input label="Name" data-index={p.index}
+                                            data-field="contactName" value={p.contactName}
+                                            onchange={handlePhoneField}></lightning-input>
+                                        <lightning-combobox label="Phone label" data-index={p.index}
+                                            data-field="phoneLabel" options={phoneLabelOptions}
+                                            value={p.phoneLabel} onchange={handlePhoneField}></lightning-combobox>
+                                    </div>
+
+                                    <lightning-input label="Avatar URL" data-index={p.index}
+                                        data-field="avatarUrl" value={p.avatarUrl}
+                                        field-level-help="Shown in Favorites, in the call and on the Messages thread. Any https URL the phone can reach."
+                                        onchange={handlePhoneField}></lightning-input>
+                                    <div class="upload">
+                                        <lightning-input type="file" label="Upload avatar" variant="label-hidden"
+                                            accept="image/png,image/jpeg,image/heic,image/heif,image/gif"
+                                            data-target="avatarUrl" data-index={p.index}
+                                            onchange={handlePickImage}></lightning-input>
+                                        <template lwc:if={p.uploadingAvatar}>
+                                            <lightning-spinner size="small" variant="brand"
+                                                alternative-text="Uploading"></lightning-spinner>
+                                        </template>
+                                        <small>or upload one — it gets served from this org, no allowlisting needed</small>
+                                    </div>
+
+                                    <lightning-input label="Call background URL" data-index={p.index}
+                                        data-field="callBackgroundUrl" value={p.callBackgroundUrl}
+                                        field-level-help="Full-screen photo behind this contact's call. Blank leaves a plain dark screen."
+                                        onchange={handlePhoneField}></lightning-input>
+                                    <div class="upload">
+                                        <lightning-input type="file" label="Upload call background" variant="label-hidden"
+                                            accept="image/png,image/jpeg,image/heic,image/heif,image/gif"
+                                            data-target="callBackgroundUrl" data-index={p.index}
+                                            onchange={handlePickImage}></lightning-input>
+                                        <template lwc:if={p.uploadingBackground}>
+                                            <lightning-spinner size="small" variant="brand"
+                                                alternative-text="Uploading"></lightning-spinner>
+                                        </template>
+                                        <small>or upload one</small>
+                                    </div>
+
+                                    <details class="advanced">
+                                        <summary>Call timing and subtitle</summary>
+                                        <lightning-input label="Call subtitle" data-index={p.index}
+                                            data-field="callSubtitle" value={p.callSubtitle}
+                                            placeholder={p.subtitlePlaceholder}
+                                            field-level-help="Leave it blank and the app writes “calling mobile…” on its own, following the Phone label."
+                                            onchange={handlePhoneField}></lightning-input>
+                                        <div class="two">
+                                            <lightning-input type="number" min="0" max="999.9" step="0.5"
+                                                label="Ring duration (seconds)" data-index={p.index}
+                                                data-field="ringSeconds" value={p.ringSeconds}
+                                                onchange={handlePhoneField}></lightning-input>
+                                            <lightning-input type="number" min="0" max="999.9" step="0.5"
+                                                label="Show banner after (seconds)" data-index={p.index}
+                                                data-field="notificationAfterSeconds"
+                                                field-level-help="When this call's first banner does not set a time of its own. Blank falls back to nine seconds."
+                                                value={p.notificationAfterSeconds}
+                                                onchange={handlePhoneField}></lightning-input>
+                                        </div>
+                                    </details>
+
+                                    <details class="advanced">
+                                        <summary>{p.voiceSummary}</summary>
+                                        <p class="section-help">
+                                            Only iOS-NativePhoneAgent reads this. With a My Domain filled in,
+                                            the call to this contact is answered live on the same native call
+                                            screen, right when it stops ringing. Leave it blank for the scripted call.
+                                        </p>
+                                        <lightning-input label="My Domain URL" data-index={p.index}
+                                            data-field="voiceMyDomain" value={p.voiceMyDomain}
+                                            placeholder="https://acme.my.salesforce.com"
+                                            onchange={handlePhoneField}></lightning-input>
+                                        <lightning-combobox label="Connection" data-index={p.index}
+                                            data-field="voiceConnection" options={voiceConnectionOptions}
+                                            value={p.voiceConnection} onchange={handlePhoneField}></lightning-combobox>
+                                        <template lwc:if={p.voiceIsMessaging}>
+                                            <lightning-input label="Deployment API name" data-index={p.index}
+                                                data-field="voiceEsDeveloperName" value={p.voiceEsDeveloperName}
+                                                placeholder="ADA_Mobile"
+                                                field-level-help="Setup → Embedded Service Deployments."
+                                                onchange={handlePhoneField}></lightning-input>
+                                            <div class="two">
+                                                <lightning-input label="Org ID" data-index={p.index}
+                                                    data-field="voiceOrgId" value={p.voiceOrgId}
+                                                    placeholder="00D…" max-length="18"
+                                                    onchange={handlePhoneField}></lightning-input>
+                                                <lightning-input label="SCRT URL" data-index={p.index}
+                                                    data-field="voiceScrtUrl" value={p.voiceScrtUrl}
+                                                    placeholder="https://acme.my.salesforce-scrt.com"
+                                                    onchange={handlePhoneField}></lightning-input>
+                                            </div>
+                                        </template>
+                                        <template lwc:else>
+                                            <lightning-input label="Agent ID" data-index={p.index}
+                                                data-field="voiceAgentId" value={p.voiceAgentId}
+                                                placeholder="0Xx…" max-length="18"
+                                                field-level-help="Setup → Agents: the 0Xx… id at the end of the agent's URL."
+                                                onchange={handlePhoneField}></lightning-input>
+                                            <lightning-input label="Greeting" data-index={p.index}
+                                                data-field="voiceGreeting" value={p.voiceGreeting}
+                                                placeholder={p.voiceGreetingPlaceholder} max-length="255"
+                                                field-level-help="The first line heard when the call picks up. Blank uses the line shown here."
+                                                onchange={handlePhoneField}></lightning-input>
+                                            <small class="hint">Type <strong>[FIRST_NAME]</strong> where the caller's name
+                                                goes, e.g. <em>I am Ada. Hi [FIRST_NAME], how can I help you today?</em>
+                                                Don't open with the name: the first words of the call can be cut off.
+                                                The app swaps in the first name entered on its Setup screen, or leaves it
+                                                out when none is entered.</small>
+                                        </template>
+                                    </details>
+
+                                    <button type="button" class="fav-thread" data-index={p.index}
+                                        onclick={handlePhoneContactPick}>{p.threadHint}</button>
+                                </div>
+                            </template>
+
+                            <lightning-button label="Add contact" icon-name="utility:add"
+                                onclick={addPhoneContact}></lightning-button>
+
+                            <template lwc:if={noPhoneContacts}>
+                                <p class="section-help">
+                                    Nothing is in the Phone app yet, so Favorites opens empty and no call
+                                    can be placed. Add a contact, or tick “Show in the Phone app” on a
+                                    conversation you already have.
+                                </p>
+                            </template>
+                        </lightning-accordion-section>
+
+                        <lightning-accordion-section name="advanced" label="5. Advanced appearance">
+                            <p class="section-help">
+                                These values are optional. Defaults work for most demos.
+                            </p>
+                            <lightning-combobox label="Bubble color" options={bubbleStyleOptions}
+                                data-field="bubbleStyle" value={demo.bubbleStyle}
+                                onchange={handleDemoField}></lightning-combobox>
+                            <div class="three">
+                                <lightning-input label="Carrier" data-field="carrier" value={demo.carrier}
+                                    field-level-help="Not drawn on the phone right now: the Dynamic Island covers that corner of the status bar. The value is stored and served, so it comes back the day it has somewhere to sit."
+                                    onchange={handleDemoField}></lightning-input>
+                                <lightning-input type="number" min="0" max="4" step="1"
+                                    label="Signal bars" data-field="signalBars"
+                                    value={demo.signalBars} onchange={handleDemoField}></lightning-input>
+                                <lightning-input type="number" min="0" max="100" step="1"
+                                    label="Battery (%)" data-field="batteryLevel" data-transform="percent"
+                                    value={batteryPercent} onchange={handleDemoField}></lightning-input>
+                            </div>
+                            <div class="three">
+                                <lightning-input type="checkbox" label="Show Wi-Fi"
+                                    data-field="showWifi" checked={demo.showWifi}
+                                    onchange={handleDemoField}></lightning-input>
+                                <lightning-input type="number" min="0" max="3" step="1"
+                                    label="Wi-Fi strength" data-field="wifiStrength"
+                                    value={demo.wifiStrength} onchange={handleDemoField}></lightning-input>
+                                <lightning-input type="checkbox" label="Charging"
+                                    data-field="isCharging" checked={demo.isCharging}
+                                    onchange={handleDemoField}></lightning-input>
+                            </div>
+                        </lightning-accordion-section>
+                    </lightning-accordion>
+                </div>
+        </template>
+        <template lwc:else>
+            <div class="empty slds-p-around_large">
+                <p>No demo selected. Create one to get started.</p>
+            </div>
+        </template>
+        </div><!-- /.left -->
+
+        <template lwc:if={hasTree}>
+                <!-- preview -->
+                <div class="preview">
+                    <div class="tabs pv" role="tablist" aria-label="Phone preview">
+                        <template for:each={previewTabs} for:item="t">
+                            <button key={t.key} type="button" role="tab" aria-selected={t.selected}
+                                class={t.cls} data-mode={t.mode}
+                                onclick={handlePreviewTab}>{t.label}</button>
+                        </template>
+                    </div>
+                    <div class="pv-scroll">
+                    <c-imessage-phone-preview mode={previewMode} demo={demo}
+                        notifications={notifications} conversations={conversations}
+                        contacts={phoneContacts}
+                        active-notification-index={activeNotificationIndex}
+                        active-conversation={activeConversation}
+                        selected-step={selectedStep}
+                        onselectstep={handleSelectStep}
+                        onselectconversation={handleSelectConversation}></c-imessage-phone-preview>
+                    </div>
+                </div>
+        </template>
+      </div><!-- /.cols -->
+    </div>
+</template>

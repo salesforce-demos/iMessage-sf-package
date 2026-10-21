@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Agent_ES_Developer_Name__c</fullName>
+    <description>Messaging connection: API name of the Messaging for In-App and Web deployment.</description>
+    <inlineHelpText>Setup → Embedded Service Deployments.</inlineHelpText>
+    <label>Voice: Deployment API Name</label>
+    <length>80</length>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Text</type>
+</CustomField>

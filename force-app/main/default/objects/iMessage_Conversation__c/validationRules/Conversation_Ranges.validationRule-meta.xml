@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conversation_Ranges</fullName>
+    <active>false</active>
+    <description>Keeps conversation counters, playback speed and call timings within supported ranges.</description>
+    <errorConditionFormula>OR(
+  AND(NOT(ISBLANK(Unread_Count__c)), OR(Unread_Count__c &lt; 0, Unread_Count__c &gt; 999)),
+  AND(NOT(ISBLANK(Transcript_Speed__c)), OR(Transcript_Speed__c &lt; 1, Transcript_Speed__c &gt; 99999)),
+  AND(NOT(ISBLANK(Ring_Seconds__c)), OR(Ring_Seconds__c &lt; 0, Ring_Seconds__c &gt; 999.9)),
+  AND(NOT(ISBLANK(Notification_After_Seconds__c)), OR(Notification_After_Seconds__c &lt; 0, Notification_After_Seconds__c &gt; 999.9))
+)</errorConditionFormula>
+    <errorMessage>Unread count must be 0–999, transcript speed 1–99999 milliseconds, and the call timings 0–999.9 seconds.</errorMessage>
+</ValidationRule>

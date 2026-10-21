@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>React_To_Previous__c</fullName>
+    <label>React To Previous</label>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+                <value><fullName>heart</fullName><default>false</default><label>heart</label></value>
+                <value><fullName>thumbsUp</fullName><default>false</default><label>thumbsUp</label></value>
+                <value><fullName>thumbsDown</fullName><default>false</default><label>thumbsDown</label></value>
+                <value><fullName>haha</fullName><default>false</default><label>haha</label></value>
+                <value><fullName>exclamation</fullName><default>false</default><label>exclamation</label></value>
+                <value><fullName>question</fullName><default>false</default><label>question</label></value>
+        </valueSetDefinition>
+    </valueSet>
+    <type>Picklist</type>
+</CustomField>

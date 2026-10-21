@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Message_Ranges</fullName>
+    <active>false</active>
+    <description>Keeps message timing and reply positions within supported numeric ranges.</description>
+    <errorConditionFormula>OR(
+  AND(NOT(ISBLANK(Typing_Seconds__c)), OR(Typing_Seconds__c &lt; 0, Typing_Seconds__c &gt; 999.9)),
+  AND(NOT(ISBLANK(Pause_Seconds__c)), OR(Pause_Seconds__c &lt; 0, Pause_Seconds__c &gt; 999.9)),
+  AND(NOT(ISBLANK(Reply_To_Step__c)), Reply_To_Step__c &lt; 1)
+)</errorConditionFormula>
+    <errorMessage>Typing and pause must be 0–999.9 seconds; a reply target must be step 1 or later.</errorMessage>
+</ValidationRule>

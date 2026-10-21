@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Agent_My_Domain__c</fullName>
+    <description>My Domain of the org that hosts this contact's live voice line. Filled in, the call is answered live; blank keeps the scripted call.</description>
+    <inlineHelpText>https://acme.my.salesforce.com. Blank = scripted call that rings until More.</inlineHelpText>
+    <label>Voice: My Domain URL</label>
+    <required>false</required>
+    <type>Url</type>
+</CustomField>

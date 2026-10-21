@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SB_Signal_Bars__c</fullName>
+    <inlineHelpText>Number of cellular signal bars shown in the preview, from 0 to 4.</inlineHelpText>
+    <label>Status Bar: Signal Bars</label>
+    <precision>1</precision>
+    <scale>0</scale>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Number</type>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Config_Name__c</fullName>
+    <description>Unique URL key mapped to configName in the JSON.</description>
+    <inlineHelpText>Unique key used in the endpoint URL. Generate it from the demo name in Builder.</inlineHelpText>
+    <label>URL Key</label>
+    <length>120</length>
+    <required>false</required>
+    <unique>true</unique>
+    <type>Text</type>
+</CustomField>

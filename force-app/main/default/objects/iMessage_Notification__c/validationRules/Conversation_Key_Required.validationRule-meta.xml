@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conversation_Key_Required</fullName>
+    <active>false</active>
+    <description>Every call notification must identify the conversation it opens.</description>
+    <errorConditionFormula>ISBLANK(Conversation_Key__c)</errorConditionFormula>
+    <errorDisplayField>Conversation_Key__c</errorDisplayField>
+    <errorMessage>Choose the conversation opened by this notification.</errorMessage>
+</ValidationRule>

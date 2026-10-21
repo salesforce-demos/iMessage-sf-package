@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Phone_Label__c</fullName>
+    <description>The line under the name in the Phone app, and the default call subtitle (&quot;calling mobile…&quot;).</description>
+    <inlineHelpText>Blank behaves as mobile.</inlineHelpText>
+    <label>Phone Label</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>mobile</fullName>
+                <default>true</default>
+                <label>mobile</label>
+            </value>
+            <value>
+                <fullName>iPhone</fullName>
+                <default>false</default>
+                <label>iPhone</label>
+            </value>
+            <value>
+                <fullName>home</fullName>
+                <default>false</default>
+                <label>home</label>
+            </value>
+            <value>
+                <fullName>work</fullName>
+                <default>false</default>
+                <label>work</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

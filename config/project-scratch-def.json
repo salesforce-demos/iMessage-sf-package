@@ -1,0 +1,20 @@
+{
+  "orgName": "iMessage Demo Config",
+  "edition": "Developer",
+  "features": [
+    "Sites",
+    "EnableSetPasswordInApi"
+  ],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    },
+    "languageSettings": {
+      "enableTranslationWorkbench": false
+    }
+  },
+  "language": "en_US"
+}

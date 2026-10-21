@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Effect__c</fullName>
+    <label>Effect</label>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+                <value><fullName>slam</fullName><default>false</default><label>slam</label></value>
+                <value><fullName>loud</fullName><default>false</default><label>loud</label></value>
+                <value><fullName>gentle</fullName><default>false</default><label>gentle</label></value>
+                <value><fullName>invisibleInk</fullName><default>false</default><label>invisibleInk</label></value>
+        </valueSetDefinition>
+    </valueSet>
+    <type>Picklist</type>
+</CustomField>

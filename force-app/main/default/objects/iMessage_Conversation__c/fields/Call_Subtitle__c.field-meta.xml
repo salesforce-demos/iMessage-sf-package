@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Call_Subtitle__c</fullName>
+    <description>The line under the name on the call screen when this contact is called from the Phone app.</description>
+    <inlineHelpText>Leave blank and the app writes &quot;calling &lt;Phone Label&gt;…&quot; on its own.</inlineHelpText>
+    <label>Call: Subtitle</label>
+    <length>120</length>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Text</type>
+</CustomField>

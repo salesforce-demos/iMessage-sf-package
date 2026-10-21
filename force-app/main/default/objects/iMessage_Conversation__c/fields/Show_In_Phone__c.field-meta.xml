@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_In_Phone__c</fullName>
+    <description>Lists this contact in the app&apos;s Phone tab (Favorites, Recents and Contacts), where tapping it starts the call. Untick for a thread that should only exist in Messages.</description>
+    <inlineHelpText>Ticked: the contact appears in the Phone app and can be called. The order is the same Sort Order this conversation already uses.</inlineHelpText>
+    <label>Show in Phone</label>
+    <defaultValue>true</defaultValue>
+    <type>Checkbox</type>
+</CustomField>

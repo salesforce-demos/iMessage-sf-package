@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conversation_Key__c</fullName>
+    <description>The id used by callNotifications and deep links.</description>
+    <inlineHelpText>Unique within a demo. Notifications use this key to open the conversation.</inlineHelpText>
+    <label>Conversation Key</label>
+    <length>60</length>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Text</type>
+</CustomField>

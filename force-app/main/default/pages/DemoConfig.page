@@ -1,0 +1,1 @@
+<apex:page controller="DemoConfigController" contentType="application/json;charset=UTF-8" showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" cache="false">{!configJson}</apex:page>

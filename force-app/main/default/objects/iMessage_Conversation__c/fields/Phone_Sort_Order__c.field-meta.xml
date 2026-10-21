@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Phone_Sort_Order__c</fullName>
+    <description>Position in the app&apos;s Phone tab. Favorites need not follow the Messages list, so this is separate from Sort Order. Blank keeps the conversation&apos;s own position, after everyone who asked for a place.</description>
+    <inlineHelpText>The Builder maintains this for you — reorder the list in the Phone app section.</inlineHelpText>
+    <label>Phone Sort Order</label>
+    <precision>4</precision>
+    <scale>0</scale>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Number</type>
+</CustomField>

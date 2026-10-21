@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Await_Photo__c</fullName>
+    <description>Parks the script until the user really sends a photo.</description>
+    <label>Await Photo</label>
+    <defaultValue>false</defaultValue>
+    <type>Checkbox</type>
+</CustomField>

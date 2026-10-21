@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reply_To_Step__c</fullName>
+    <description>Renders this step as a reply quoting an earlier step of the same conversation. 1 is the first step. Leave blank for a normal message.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Position of the step being replied to, counting from 1. Blank means this is not a reply.</inlineHelpText>
+    <label>Reply To Step</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

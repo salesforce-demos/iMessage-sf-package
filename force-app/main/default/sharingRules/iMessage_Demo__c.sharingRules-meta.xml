@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingGuestRules>
+        <fullName>Share_Demos_With_Site_Guest</fullName>
+        <accessLevel>Read</accessLevel>
+        <description>Lets the public config endpoint read the demo records. Master-detail children inherit this.</description>
+        <label>Share Demos With Site Guest</label>
+        <sharedTo>
+            <guestUser>iMessageConfig</guestUser>
+        </sharedTo>
+        <criteriaItems>
+            <field>Config_Name__c</field>
+            <operation>notEqual</operation>
+            <value></value>
+        </criteriaItems>
+    </sharingGuestRules>
+</SharingRules>

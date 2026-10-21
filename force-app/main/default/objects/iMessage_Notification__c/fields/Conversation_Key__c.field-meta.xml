@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conversation_Key__c</fullName>
+    <description>Which conversation the banner opens.</description>
+    <inlineHelpText>Must match the Conversation Key of a conversation in the same demo.</inlineHelpText>
+    <label>Conversation Key</label>
+    <length>60</length>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Text</type>
+</CustomField>

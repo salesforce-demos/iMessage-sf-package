@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Agent_Greeting__c</fullName>
+    <description>The first line heard when the call picks up (Agent API only). Blank: &quot;Hi, this is &lt;contact&gt;. How can I help you today?&quot;</description>
+    <inlineHelpText>Agent API only. Sent as $Context.Dynamic_Welcome_Message.</inlineHelpText>
+    <label>Voice: Greeting</label>
+    <length>255</length>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Text</type>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Document_Icon__c</fullName>
+    <description>SF Symbol or https URL for the trailing thumbnail.</description>
+    <label>Document Icon</label>
+    <length>255</length>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Text</type>
+</CustomField>

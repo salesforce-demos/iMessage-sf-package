@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Typing_Seconds__c</fullName>
+    <inlineHelpText>How long the typing indicator is shown before this step, from 0 to 999.9 seconds.</inlineHelpText>
+    <label>Typing Seconds</label>
+    <precision>4</precision>
+    <scale>1</scale>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Number</type>
+</CustomField>

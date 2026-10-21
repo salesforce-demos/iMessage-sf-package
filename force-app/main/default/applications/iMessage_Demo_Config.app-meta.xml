@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>iMessage_Builder</defaultLandingTab>
+    <description>Guided workspace for creating, validating, and previewing iMessage demos.</description>
+    <formFactors>Large</formFactors>
+    <formFactors>Small</formFactors>
+    <isNavPersonalizationDisabled>true</isNavPersonalizationDisabled>
+    <label>iMessage Demo Config</label>
+    <navType>Standard</navType>
+    <tabs>iMessage_Builder</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

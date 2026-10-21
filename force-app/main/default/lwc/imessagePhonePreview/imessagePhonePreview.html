@@ -1,0 +1,151 @@
+<template>
+    <div class="fit">
+    <section class="phone" aria-label={previewLabel}>
+        <div class="island" aria-hidden="true"></div>
+
+        <!-- PHONE (Favorites) -->
+        <template lwc:if={isPhone}>
+            <div class="screen">
+                <div class="statusbar"><span>9:41</span><span class="sb-right" aria-hidden="true">▮▮▮  ᯤ  ▰</span></div>
+                <div class="list-top"><span class="edit">Edit</span><span class="filter">＋</span></div>
+                <div class="big-title">Favorites</div>
+                <div class="rows">
+                    <template for:each={favorites} for:item="f">
+                        <div key={f.key} class="frow" data-index={f.index}
+                            role="button" tabindex="0" aria-label={f.ariaLabel}
+                            onclick={handleRowClick} onkeydown={handleRowKeydown}>
+                            <div class="avatar" style={f.avatarStyle}></div>
+                            <div class="lbody">
+                                <div class="lname">{f.name}</div>
+                                <div class="flabel">☎ {f.label}</div>
+                            </div>
+                            <span class="fnum" title="contacts[] id">{f.position}</span>
+                        </div>
+                    </template>
+                    <template lwc:if={noFavorites}>
+                        <div class="fempty">No conversation is ticked “Show in the Phone app”.</div>
+                    </template>
+                </div>
+                <div class="tabbar" aria-hidden="true">
+                    <span class="tab is-on">★<i>Favorites</i></span>
+                    <span class="tab">🕘<i>Recents</i></span>
+                    <span class="tab">👤<i>Contacts</i></span>
+                    <span class="tab">⌗<i>Keypad</i></span>
+                    <span class="tab">▭<i>Voicemail</i></span>
+                </div>
+            </div>
+        </template>
+
+        <!-- CALL -->
+        <template lwc:if={isCall}>
+            <div class="poster" style={posterStyle}>
+                <div class="vignette"></div>
+                <div class="statusbar light">
+                    <span>9:41</span><span class="sb-right" aria-hidden="true">▮▮▮  ᯤ  ▰</span>
+                </div>
+
+                <template lwc:if={banner}>
+                    <div class="banner">
+                        <div class="banner-icon" style={banner.colorStyle}>💬</div>
+                        <div class="banner-body">
+                            <div class="banner-title">{banner.title}</div>
+                            <div class="banner-msg">{banner.message}</div>
+                        </div>
+                        <div class="banner-time">{banner.timeAgo}</div>
+                    </div>
+                </template>
+
+                <div class="call-contact">
+                    <div class="call-name">{contactName}</div>
+                    <div class="call-sub">{callSubtitle}</div>
+                </div>
+
+                <div class="controls" aria-hidden="true">
+                    <div class="ctl"><span>🎤</span><i>mute</i></div>
+                    <div class="ctl"><span>⌗</span><i>keypad</i></div>
+                    <div class="ctl"><span>🔊</span><i>audio</i></div>
+                    <div class="ctl"><span>＋</span><i>add call</i></div>
+                    <div class="ctl"><span>📹</span><i>FaceTime</i></div>
+                    <div class="ctl"><span>👤</span><i>contacts</i></div>
+                </div>
+                <div class="end"></div>
+            </div>
+        </template>
+
+        <!-- THREAD -->
+        <template lwc:if={isThread}>
+            <div class="screen">
+                <div class="statusbar"><span>9:41</span><span class="sb-right" aria-hidden="true">▮▮▮  ᯤ  ▰</span></div>
+                <div class="thread-head">
+                    <div class="back" aria-hidden="true">‹</div>
+                    <div class="head-center">
+                        <div class="avatar big" style={threadAvatarStyle}></div>
+                        <div class="head-name">{threadName} ›</div>
+                    </div>
+                    <div class="video" aria-hidden="true">▢</div>
+                </div>
+
+                <div class="transcript">
+                    <template for:each={bubbles} for:item="b">
+                        <div key={b.key}>
+                            <template lwc:if={b.quote}>
+                                <div class={b.quoteRowCls}>
+                                    <div class="quote">{b.quote}</div>
+                                </div>
+                                <div class={b.quoteRowCls}><div class="connector"></div></div>
+                            </template>
+                            <div class={b.rowCls} style={b.rowStyle}>
+                                <div class={b.cls} data-step={b.scriptIndex}
+                                     role="button" tabindex="0" aria-label={b.ariaLabel}
+                                     aria-pressed={b.selected} onclick={handleBubbleClick}
+                                     onkeydown={handleBubbleKeydown}>{b.body}</div>
+                            </div>
+                            <template lwc:if={b.replyLabel}>
+                                <div class={b.replyRowCls}>
+                                    <span class="reply-link">{b.replyLabel}</span>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="composer">
+                    <div class="plus">＋</div>
+                    <div class="field">{placeholder}</div>
+                </div>
+            </div>
+        </template>
+
+        <!-- LIST -->
+        <template lwc:if={isList}>
+            <div class="screen">
+                <div class="statusbar"><span>9:41</span><span class="sb-right" aria-hidden="true">▮▮▮  ᯤ  ▰</span></div>
+                <div class="list-top"><span class="edit">Edit</span><span class="filter">☰</span></div>
+                <div class="big-title">Messages</div>
+                <div class="rows">
+                    <template for:each={rows} for:item="r">
+                        <div key={r.key} class="lrow" data-index={r.index}
+                            role="button" tabindex="0" aria-label={r.ariaLabel}
+                            onclick={handleRowClick} onkeydown={handleRowKeydown}>
+                            <template lwc:if={r.unread}><div class="dot"></div></template>
+                            <div class="avatar" style={r.avatarStyle}></div>
+                            <div class="lbody">
+                                <div class="ltop">
+                                    <span class="lname">{r.name}</span>
+                                    <span class="ltime">{r.time} ›</span>
+                                </div>
+                                <div class="lprev">
+                                    <template lwc:if={r.forwarded}><span class="fwd">↳ </span></template>
+                                    {r.preview}
+                                    <template lwc:if={r.muted}><span class="mute">🔕</span></template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="search-bar"><div class="search">🔍 Search</div><div class="compose">✎</div></div>
+            </div>
+        </template>
+    </section>
+    </div>
+</template>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>After_Seconds__c</fullName>
+    <description>When this banner drops in, counted from the moment the call connects. Blank follows nine seconds behind the previous banner of the same call, or the contact&apos;s own Call: Banner After Seconds when this is the first one.</description>
+    <inlineHelpText>Seconds after the call connects. Blank keeps the queue&apos;s rhythm.</inlineHelpText>
+    <label>After Seconds</label>
+    <precision>4</precision>
+    <scale>1</scale>
+    <required>false</required>
+    <unique>false</unique>
+    <type>Number</type>
+</CustomField>

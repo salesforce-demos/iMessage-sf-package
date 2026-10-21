@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SB_Is_Charging__c</fullName>
+    <label>Status Bar: Is Charging</label>
+    <defaultValue>false</defaultValue>
+    <type>Checkbox</type>
+</CustomField>
