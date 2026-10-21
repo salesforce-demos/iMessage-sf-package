@@ -64,7 +64,7 @@ List<iMessage_Conversation__c> convs = new List<iMessage_Conversation__c>();
 convs.add(new iMessage_Conversation__c(
     Name = 'Salesforce', Demo__c = demo.Id, Sort_Order__c = 1,
     Conversation_Key__c = 'salesforce', Contact_Name__c = 'Salesforce',
-    Contact_Subtitle__c = 'Customer Support', Avatar_URL__c = 'https://imessagedemoconfig3-dev-ed.develop.file.force.com/sfc/dist/version/download/?oid=00Diw000002JziI&ids=068iw000000bL2Q&d=%2Fa%2Fiw0000000q6g%2F4DbisKcNp6sOkg_7DHWMwjKK8m7V3.knnpGyNDYclHs&asPdf=false',
+    Contact_Subtitle__c = 'Customer Support', Avatar_URL__c = 'https://raw.githubusercontent.com/salesforce-demos/iMessage-sf-package/main/assets/seed/avatar-salesforce.png',
     Last_Message_Preview__c = 'Can you send a photo of the unit? I\'ll attach it to case #00123.',
     Last_Message_Time__c = 'now',
     Unread_Count__c = 2, Is_SMS__c = false,
@@ -72,20 +72,20 @@ convs.add(new iMessage_Conversation__c(
     Transcript_Speed__c = 600, Draft_Text__c = null,
     Show_In_Phone__c = true, Phone_Sort_Order__c = 1,
     Phone_Label__c = 'mobile', Call_Subtitle__c = 'calling mobile…',
-    Call_Background_URL__c = 'https://imessagedemoconfig3-dev-ed.develop.file.force.com/sfc/dist/version/download/?oid=00Diw000002JziI&ids=068iw000000bMch&d=%2Fa%2Fiw0000000q6f%2Fhdromk1N9_.SCslcDUU827gDNDOSiuQ..hQlUjiA.Mk&asPdf=false',
+    Call_Background_URL__c = 'https://raw.githubusercontent.com/salesforce-demos/iMessage-sf-package/main/assets/seed/call-background-salesforce.png',
     Ring_Seconds__c = 4,
     // The banner carries its own `After Seconds`, so nothing is needed here.
     Notification_After_Seconds__c = null,
     // iOS-NativePhoneAgent: ADA answers this call. The plain app ignores it.
     Agent_Connection__c = 'agentAPI',
-    Agent_My_Domain__c = 'https://df26-adecco-distribution.my.salesforce.com',
-    Agent_Id__c = '0XxgK000002J0w1SAC',
+    Agent_My_Domain__c = 'https://acme.my.salesforce.com',
+    Agent_Id__c = '0Xx000000000000000',
     Agent_Greeting__c = 'Hi, this is Salesforce Support. How can I help you today?'
 ));
 convs.add(new iMessage_Conversation__c(
     Name = 'Blink', Demo__c = demo.Id, Sort_Order__c = 2,
     Conversation_Key__c = 'trailhead', Contact_Name__c = 'Blink',
-    Contact_Subtitle__c = null, Avatar_URL__c = 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/8a/65/e9/8a65e9b7-aed3-3944-bc84-29db6205e6b4/AppIcon-0-0-1x_U007epad-0-1-0-sRGB-85-220.png/512x512bb.jpg',
+    Contact_Subtitle__c = null, Avatar_URL__c = 'https://raw.githubusercontent.com/salesforce-demos/iMessage-sf-package/main/assets/seed/app-icon.jpg',
     Last_Message_Preview__c = 'You earned the Agentforce Basics badge 🎉',
     Last_Message_Time__c = '9:12 AM',
     Unread_Count__c = 0, Is_SMS__c = false,
@@ -93,7 +93,7 @@ convs.add(new iMessage_Conversation__c(
     Transcript_Speed__c = 600, Draft_Text__c = null,
     Show_In_Phone__c = true, Phone_Sort_Order__c = 3,
     Phone_Label__c = 'mobile', Call_Subtitle__c = 'calling mobile…',
-    Call_Background_URL__c = 'https://images.squarespace-cdn.com/content/v1/5e21c06a08d2fc435f20e6c5/a370e223-0239-4205-b281-7cfb9c61d08e/shot-10-wide-shot-door_1002_V1.jpg?format=1500w',
+    Call_Background_URL__c = 'https://raw.githubusercontent.com/salesforce-demos/iMessage-sf-package/main/assets/seed/photo-door.webp',
     Ring_Seconds__c = 3,
     Notification_After_Seconds__c = null
 ));
@@ -111,7 +111,7 @@ convs.add(new iMessage_Conversation__c(
 convs.add(new iMessage_Conversation__c(
     Name = 'Canada Goose', Demo__c = demo.Id, Sort_Order__c = 4,
     Conversation_Key__c = 'delivery', Contact_Name__c = 'Canada Goose',
-    Contact_Subtitle__c = null, Avatar_URL__c = 'https://ios-wrapper-test-kk-de916285ba09.herokuapp.com/resources/phone/WTNYC-Apr-2026/Canada-Goose-logo.png',
+    Contact_Subtitle__c = null, Avatar_URL__c = 'https://raw.githubusercontent.com/salesforce-demos/iMessage-sf-package/main/assets/seed/canada-goose-logo.png',
     Last_Message_Preview__c = 'Your package was delivered to the front door.',
     Last_Message_Time__c = 'Yesterday',
     Unread_Count__c = 0, Is_SMS__c = true,
@@ -119,7 +119,7 @@ convs.add(new iMessage_Conversation__c(
     Transcript_Speed__c = 600, Draft_Text__c = null,
     Show_In_Phone__c = true, Phone_Sort_Order__c = 2,
     Phone_Label__c = 'mobile', Call_Subtitle__c = 'calling mobile…',
-    Call_Background_URL__c = 'https://ios-wrapper-test-kk-de916285ba09.herokuapp.com/resources/phone/WTNYC-Apr-2026/Contact-BG.png',
+    Call_Background_URL__c = 'https://raw.githubusercontent.com/salesforce-demos/iMessage-sf-package/main/assets/seed/contact-background.png',
     Ring_Seconds__c = 3,
     Notification_After_Seconds__c = null
 ));

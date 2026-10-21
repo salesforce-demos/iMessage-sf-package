@@ -121,7 +121,7 @@ private class DemoConfigServiceTest {
         ];
         c.Agent_Connection__c = 'agentAPI';
         c.Agent_My_Domain__c = 'https://acme.my.salesforce.com';
-        c.Agent_Id__c = '0XxgK000002J0w1SAC';
+        c.Agent_Id__c = '0Xx000000000000000';
         c.Agent_Greeting__c = 'Hi, this is Nora.';
         update c;
 
@@ -131,7 +131,7 @@ private class DemoConfigServiceTest {
         Map<String, Object> voice = (Map<String, Object>) nora.get('voice');
         Assert.areEqual('agentAPI', voice.get('connection'));
         Assert.areEqual('https://acme.my.salesforce.com', voice.get('myDomain'));
-        Assert.areEqual('0XxgK000002J0w1SAC', voice.get('agentId'));
+        Assert.areEqual('0Xx000000000000000', voice.get('agentId'));
         Assert.areEqual('Hi, this is Nora.', voice.get('greeting'));
         Assert.isFalse(voice.containsKey('esDeveloperName'),
             'blank Messaging fields stay out of an Agent API voice line');

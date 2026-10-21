@@ -16,6 +16,10 @@ iMessage Demo  ──── Apex ────►  /imessage/DemoConfig  ──HT
 
 ## Setup
 
+The sample demo in `scripts/seedDemo.apex` uses `Acme` placeholders for the
+voice settings. Replace `Agent_My_Domain__c` and `Agent_Id__c` with your own
+agent values, or leave them blank to use a scripted call.
+
 Create a scratch org, deploy the metadata and load the sample demo:
 
 ```bash
@@ -100,6 +104,7 @@ force-app/main/default/
 ├── sites/              Public Site
 ├── permissionsets/     Admin (edit) and Guest (read-only)
 └── ...
+assets/seed/        Images used by the sample demo
 scripts/
 ├── seedDemo.apex       Loads the sample demo
 └── assignGuest.apex    Grants the guest user read access
